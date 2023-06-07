@@ -1,6 +1,7 @@
 package com.amk.weather.ui.daysweather
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -23,16 +24,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.amk.weather.R
 import com.amk.weather.di.myModules
 import com.amk.weather.model.data.DaysWeather
 import com.amk.weather.model.data.DaysWeatherResponse
 import com.amk.weather.ui.shimmer.DaysWeatherShimmer
 import com.amk.weather.ui.theme.*
-import com.amk.weather.util.convertKelvinToCelsius
-import com.amk.weather.util.convertMeterOnMinToKilometerOnHour
-import com.amk.weather.util.convertUnixToDate
-import com.amk.weather.util.weatherIcon
+import com.amk.weather.util.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.navigation.getNavController
 import dev.burnoo.cokoin.navigation.getNavViewModel
@@ -59,7 +58,10 @@ class WeatherByDay : ComponentActivity() {
 fun DaysWeather() {
     val navigation = getNavController()
     val viewModel = getNavViewModel<WeatherByDayViewModel>()
-    viewModel.getWeatherByDay()
+    val navBackStackEntry = navigation.currentBackStackEntry
+    val lat = navBackStackEntry?.arguments?.getString(KEY_WEATHER_LAT)
+    val lon = navBackStackEntry?.arguments?.getString(KEY_WEATHER_LON)
+    viewModel.getWeatherByDay(lat!!.toDouble(), lon!!.toDouble())
 
     Image(
         painter = painterResource(R.drawable.img_background),
