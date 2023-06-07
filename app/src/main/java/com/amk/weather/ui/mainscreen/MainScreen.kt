@@ -1,6 +1,5 @@
 package com.amk.weather.ui.mainscreen
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -33,8 +32,6 @@ import com.amk.weather.model.data.HourlyWeatherResponse
 import com.amk.weather.ui.shimmer.MainScreenShimmer
 import com.amk.weather.ui.theme.*
 import com.amk.weather.util.*
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import dev.burnoo.cokoin.Koin
@@ -59,14 +56,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
 fun MainWeatherScreen() {
     val context = LocalContext.current
     val navigation = getNavController()
     val viewModel = getNavViewModel<MainScreenViewModel>()
     val hourlyViewModel = getNavViewModel<HourlyWeatherViewModel>()
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = viewModel.showLoading.value)
 
     val selectedLocation = remember { mutableStateOf<LatLng?>(null) }
     val showMap = remember { mutableStateOf(true) }
@@ -92,7 +87,7 @@ fun MainWeatherScreen() {
             modifier = Modifier
                 .fillMaxSize()
         )
-//
+
         if (!NetworkChecker(context).isInternetConnected) {
             NoInternetDialog(onTryAgain = {
                 if (NetworkChecker(context).isInternetConnected) {
@@ -114,52 +109,39 @@ fun MainWeatherScreen() {
 
             Box(modifier = Modifier.fillMaxSize()) {
 
-                SwipeRefresh(state = swipeRefreshState, onRefresh = {
-                    if (viewModel.showLoading.value) {
-                        viewModel.getWeatherInfo(
-                            selectedLocation.value!!.latitude,
-                            selectedLocation.value!!.longitude
-                        )
-                        hourlyViewModel.getHourlyWeather(
-                            selectedLocation.value!!.latitude,
-                            selectedLocation.value!!.longitude
-                        )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+
+                    MainToolbar()
+
+                    CityName(viewModel.weatherInfo.value, getDateOfMobile())
+
+                    Weather(viewModel.weatherInfo.value)
+
+                    WeatherInfo(viewModel.weatherInfo.value)
+
+                    TempDays {
+                        navigation.navigate("${MyScreens.WeatherScreen.route}/${selectedLocation.value!!.latitude}/${selectedLocation.value!!.longitude}")
                     }
-                }) {
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-
-                        MainToolbar()
-
-                        CityName(viewModel.weatherInfo.value, getDateOfMobile())
-
-                        Weather(viewModel.weatherInfo.value)
-
-                        WeatherInfo(viewModel.weatherInfo.value)
-
-                        TempDays {
-                            navigation.navigate("${MyScreens.WeatherScreen.route}/${selectedLocation.value!!.latitude}/${selectedLocation.value!!.longitude}")
-                        }
-
-                        Divider(
-                            color = Color(226, 162, 114),
-                            thickness = 0.5.dp,
-                            modifier = Modifier.padding(
-                                start = 32.dp,
-                                top = 8.dp,
-                                bottom = 8.dp,
-                                end = 32.dp
-                            )
+                    Divider(
+                        color = Color(226, 162, 114),
+                        thickness = 0.5.dp,
+                        modifier = Modifier.padding(
+                            start = 32.dp,
+                            top = 8.dp,
+                            bottom = 8.dp,
+                            end = 32.dp
                         )
+                    )
 
-                        Temperature(hourlyViewModel.hourlyWeather.value)
+                    Temperature(hourlyViewModel.hourlyWeather.value)
 
-                    }
                 }
+
             }
         }
     }

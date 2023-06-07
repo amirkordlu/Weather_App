@@ -83,8 +83,7 @@ dependencies {
     //Shimmer
     implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.4'
 
-    //Swipe Refresh
-    implementation 'com.google.accompanist:accompanist-swiperefresh:0.27.0'
+    //
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
 
     //Google Maps
