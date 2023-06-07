@@ -4,6 +4,6 @@ import com.amk.weather.model.data.HourlyWeatherResponse
 
 interface HourlyWeatherRepository {
 
-    suspend fun getHourlyWeather(): HourlyWeatherResponse
+    suspend fun getHourlyWeather(lat: Double, lon: Double): HourlyWeatherResponse
 
 }

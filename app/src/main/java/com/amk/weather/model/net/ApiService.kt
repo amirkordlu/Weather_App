@@ -29,8 +29,8 @@ interface ApiService {
 
     @GET("forecast")
     suspend fun getHourlyWeather(
-        @Query("lat") lat: Double = 35.6589015,
-        @Query("lon") lon: Double = 51.0586022,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
         @Query("appid") appid: String = APP_ID
     ): HourlyWeatherResponse
 

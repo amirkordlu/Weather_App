@@ -78,7 +78,7 @@ fun MainWeatherScreen() {
             onMapClick = { loc ->
                 selectedLocation.value = loc
                 viewModel.getWeatherInfo(loc.latitude, loc.longitude)
-                hourlyViewModel.getHourlyWeather()
+                hourlyViewModel.getHourlyWeather(loc.latitude, loc.longitude)
                 showMap.value = false
             }
         )
@@ -120,7 +120,10 @@ fun MainWeatherScreen() {
                             selectedLocation.value!!.latitude,
                             selectedLocation.value!!.longitude
                         )
-                        hourlyViewModel.getHourlyWeather()
+                        hourlyViewModel.getHourlyWeather(
+                            selectedLocation.value!!.latitude,
+                            selectedLocation.value!!.longitude
+                        )
                     }
                 }) {
 
@@ -139,7 +142,7 @@ fun MainWeatherScreen() {
                         WeatherInfo(viewModel.weatherInfo.value)
 
                         TempDays {
-                            navigation.navigate(MyScreens.WeatherScreen.route)
+                            navigation.navigate("${MyScreens.WeatherScreen.route}/${selectedLocation.value!!.latitude}/${selectedLocation.value!!.longitude}")
                         }
 
                         Divider(
@@ -460,21 +463,6 @@ fun TempDays(onDaysWeather: () -> Unit) {
 
     }
 }
-
-//@Composable
-//fun SwipeRefreshLayout(isLoading: Boolean) {
-//    ComposePullToRefresh(
-//        isRefreshing = isLoading,
-//        onRefresh = {
-//
-//        },
-//        indicatorColor = MaterialTheme.colors.onPrimary,
-//        content = {
-//
-//        }
-//    )
-//
-//}
 
 @Composable
 fun NoInternetDialog(

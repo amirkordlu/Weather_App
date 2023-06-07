@@ -15,9 +15,9 @@ class HourlyWeatherViewModel(
     val hourlyWeather = mutableStateOf(HWREx)
     val showLoading = mutableStateOf(true)
 
-    fun getHourlyWeather() {
+    fun getHourlyWeather(lat: Double, lon: Double) {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val weather = hourlyWeatherRepository.getHourlyWeather()
+            val weather = hourlyWeatherRepository.getHourlyWeather(lat, lon)
             if (weather.cod == 200) {
                 hourlyWeather.value = weather
                 showLoading.value = false
