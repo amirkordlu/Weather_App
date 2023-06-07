@@ -263,7 +263,7 @@ fun Weather(weather: CurrentWeatherResponse) {
 
 @Composable
 fun WeatherInfo(weatherInfo: CurrentWeatherResponse) {
-    WeatherInfoItem(R.drawable.ic_umberella, "RainFall", "3cm")
+    WeatherInfoItem(R.drawable.ic_pressure, "Pressure", "${weatherInfo.main.pressure} Pa")
     WeatherInfoItem(
         R.drawable.ic_wind,
         "Wind",
